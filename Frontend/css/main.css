@@ -33,20 +33,32 @@
 }
 
 @-webkit-keyframes animBird {
-   from { background-position: 0px 0px; }
-   to { background-position: 0px -96px; }
+   0% { background-position: 0px 0px; }
+   25% { background-position: 0px -34px; }
+   50% { background-position: 0px -68px; }
+   75% { background-position: 0px -102px; }
+   100% { background-position: 0px -136px; }
 }
 @-moz-keyframes animBird {
-   from { background-position: 0px 0px; }
-   to { background-position: 0px -96px; }
+   0% { background-position: 0px 0px; }
+   25% { background-position: 0px -34px; }
+   50% { background-position: 0px -68px; }
+   75% { background-position: 0px -102px; }
+   100% { background-position: 0px -136px; }
 }
 @-o-keyframes animBird {
-   from { background-position: 0px 0px; }
-   to { background-position: 0px -96px; }
+   0% { background-position: 0px 0px; }
+   25% { background-position: 0px -34px; }
+   50% { background-position: 0px -68px; }
+   75% { background-position: 0px -102px; }
+   100% { background-position: 0px -136px; }
 }
 @keyframes animBird {
-   from { background-position: 0px 0px; }
-   to { background-position: 0px -96px; }
+   0% { background-position: 0px 0px; }
+   25% { background-position: 0px -34px; }
+   50% { background-position: 0px -68px; }
+   75% { background-position: 0px -102px; }
+   100% { background-position: 0px -136px; }
 }
 
 @-webkit-keyframes animPipe {
@@ -291,16 +303,22 @@ Screen - Game
    top: 200px;
 }
 
-.bird
-{
+.bird {
    position: absolute;
    width: 34px;
    height: 24px;
-   background-image: url('../assets/bird.png');
-
-   -webkit-animation: animBird 300ms steps(4) infinite;
-   animation: animBird 300ms steps(4) infinite;
-}
+   background-image: url('../assets/torr.png');
+   background-repeat: no-repeat;
+ 
+   animation: animBird 800ms steps(4) infinite;
+ }
+ 
+ @keyframes animBird {
+   100% {
+     background-position-y: -96px;
+   }
+ }
+ 
 
 .pipe
 {

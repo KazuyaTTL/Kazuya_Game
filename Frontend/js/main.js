@@ -149,8 +149,8 @@ function gameloop() {
 
    //create the bounding box
    var box = document.getElementById('player').getBoundingClientRect();
-   var origwidth = 34.0;
-   var origheight = 24.0;
+   var origwidth = 50.0;
+   var origheight = 32.0;
 
    var boxwidth = origwidth - (Math.sin(Math.abs(rotation) / 90) * 8);
    var boxheight = (origheight + box.height) / 2;
