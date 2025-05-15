@@ -185,7 +185,7 @@ Screen - Game
    bottom: 0;
    width: 100%;
    height: 20%;
-   background-image: url('../assets/land.png');
+   background-image: url('../assets/land.png'); /*phần nền đất */
    background-repeat: repeat-x;
    background-position: 0px 0px;
    background-color: #ded895;
@@ -307,7 +307,7 @@ Screen - Game
    position: absolute;
    width: 34px;
    height: 24px;
-   background-image: url('../assets/torr.png');
+   background-image: url('../assets/bird.png');
    background-repeat: no-repeat;
  
    animation: animBird 800ms steps(4) infinite;
@@ -389,4 +389,267 @@ Screen - Game
    padding: 2px;
    text-decoration: none;
    color: #fff;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    #gamecontainer {
+        min-height: 400px;
+    }
+
+    #flyarea {
+        height: 320px;
+    }
+
+    #bigscore {
+        top: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    #splash {
+        top: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 150px;
+        height: 136px;
+        background-size: contain;
+    }
+
+    #scoreboard {
+        top: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 200px;
+        height: 240px;
+        background-size: contain;
+    }
+
+    #medal {
+        top: 95px;
+        left: 30px;
+        width: 35px;
+        height: 35px;
+    }
+
+    #currentscore {
+        top: 90px;
+        left: 90px;
+        width: 90px;
+    }
+
+    #highscore {
+        top: 130px;
+        left: 90px;
+        width: 90px;
+    }
+
+    #replay {
+        top: 180px;
+        left: 50px;
+        height: 90px;
+        width: 60px;
+    }
+
+    .pipe {
+        width: 50px;
+    }
+
+    .pipe_upper, .pipe_upper:after,
+    .pipe_lower, .pipe_lower:after {
+        width: 50px;
+        background-size: 100% auto;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    #gamecontainer {
+        min-height: 300px;
+    }
+
+    #flyarea {
+        height: 240px;
+    }
+
+    #bigscore {
+        top: 10px;
+        transform: scale(0.8);
+    }
+
+    #splash {
+        width: 120px;
+        height: 109px;
+        top: 40px;
+    }
+
+    #scoreboard {
+        width: 180px;
+        height: 220px;
+        top: 40px;
+    }
+
+    #medal {
+        width: 30px;
+        height: 30px;
+        top: 83px;
+        left: 25px;
+    }
+
+    #currentscore {
+        top: 82px;
+        left: 85px;
+        width: 75px;
+        transform: scale(0.8);
+    }
+
+    #highscore {
+        top: 120px;
+        left: 85px;
+        width: 75px;
+        transform: scale(0.8);
+    }
+
+    #replay {
+        top: 165px;
+        left: 55px;
+        height: 70px;
+        width: 50px;
+        transform: scale(0.9);
+    }
+
+    .pipe {
+        width: 40px;
+    }
+
+    .pipe_upper, .pipe_upper:after,
+    .pipe_lower, .pipe_lower:after {
+        width: 40px;
+    }
+
+    .bird {
+        transform: scale(0.85);
+    }
+
+    @keyframes animBird {
+        100% {
+            background-position-y: -96px;
+        }
+    }
+
+    /* Fix animation speed for smaller screens */
+    #land {
+        -webkit-animation: animLand 3000ms linear infinite;
+        animation: animLand 3000ms linear infinite;
+    }
+    
+    #sky {
+        -webkit-animation: animSky 8s linear infinite;
+        animation: animSky 8s linear infinite;
+    }
+}
+
+/* Landscape mode for mobile devices */
+@media screen and (max-height: 480px) and (orientation: landscape) {
+    #gamecontainer {
+        min-height: 100vh;
+    }
+
+    #sky {
+        height: 70%;
+    }
+
+    #land {
+        height: 30%;
+    }
+
+    #flyarea {
+        height: 60vh;
+    }
+
+    #bigscore {
+        top: 5px;
+        left: 20px;
+        transform: scale(0.7);
+    }
+
+    #splash {
+        top: 20px;
+        left: 20px;
+        transform: scale(0.7);
+    }
+
+    #scoreboard {
+        top: 20px;
+        left: 20px;
+        transform: scale(0.7);
+        transform-origin: top left;
+    }
+
+    .pipe_upper, .pipe_upper:after,
+    .pipe_lower, .pipe_lower:after {
+        background-size: 100% auto;
+    }
+}
+
+/* Fix for very small devices */
+@media screen and (max-width: 320px) {
+    #gamecontainer {
+        min-height: 280px;
+    }
+
+    #flyarea {
+        height: 220px;
+    }
+
+    #bigscore {
+        transform: scale(0.7);
+    }
+
+    #splash {
+        width: 100px;
+        height: 90px;
+    }
+
+    #scoreboard {
+        width: 160px;
+        height: 190px;
+    }
+
+    #medal {
+        width: 25px;
+        height: 25px;
+        top: 75px;
+        left: 22px;
+    }
+
+    #currentscore {
+        top: 75px;
+        left: 80px;
+        transform: scale(0.7);
+    }
+
+    #highscore {
+        top: 110px;
+        left: 80px;
+        transform: scale(0.7);
+    }
+
+    #replay {
+        top: 150px;
+        left: 50px;
+        transform: scale(0.8);
+    }
+
+    .pipe {
+        width: 35px;
+    }
+
+    .pipe_upper, .pipe_upper:after,
+    .pipe_lower, .pipe_lower:after {
+        width: 35px;
+    }
+
+    .bird {
+        transform: scale(0.75);
+    }
 }

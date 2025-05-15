@@ -1,8 +1,16 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://wonderful-biscuit-f5e9b1.netlify.app"],  # Ghi chính xác URL frontend
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Dữ liệu mô phỏng database
 fake_db = []
