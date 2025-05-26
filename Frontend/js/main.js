@@ -6,25 +6,26 @@ var states = Object.freeze({
    ScoreScreen: 2
 });
 
-var currentstate;
+var currentstate; // Biến lưu trạng thái hiện tại của game
 
+// Các biến vật lý và vị trí cho người chơi
 var gravity = 0.25;
 var velocity = 0;
 var position = 180;
 var rotation = 0;
-var jump = -4.6;
-var flyArea = $("#flyarea").height();
-
+var jump = -4.6; // Lực nhảy
+var flyArea = $("#flyarea").height();  // Chiều cao của khu vực bay
+// Điểm số
 var score = 0;
 var highscore = 0;
-
+// Cấu hình ống cống
 var pipeheight = 90;
 var pipewidth = 52;
-var pipes = new Array();
+var pipes = new Array(); 
 
 var replayclickable = false;
 
-//sounds
+//// Khởi tạo âm thanh bằng thư viện Buzz
 var volume = 30;
 var soundJump = new buzz.sound("assets/sounds/sfx_wing.ogg");
 var soundScore = new buzz.sound("assets/sounds/sfx_point.ogg");
@@ -40,15 +41,15 @@ var loopPipeloop;
 $(document).ready(function() {
    if(window.location.search == "?debug")
       debugmode = true;
-   if(window.location.search == "?easy")
+   if(window.location.search == "?easy") // Chế độ dễ với khe hở ống lớn hơn
       pipeheight = 200;
 
-   //get the highscore
+   //Lưu điểm cao nhất
    var savedscore = getCookie("highscore");
    if(savedscore != "")
       highscore = parseInt(savedscore);
 
-   //start with the splash screen
+   //Bắt đầu với màn hình chờ
    showSplash();
 });
 
@@ -76,28 +77,27 @@ function showSplash()
 {
    currentstate = states.SplashScreen;
 
-   //set the defaults (again)
+   //Mặc định
    velocity = 0;
    position = 180;
    rotation = 0;
    score = 0;
 
-   //update the player in preparation for the next game
    $("#player").css({ y: 0, x: 0 });
-   updatePlayer($("#player"));
+   updatePlayer($("#player")); // Cập nhật vị trí ban đầu của chim
 
    soundSwoosh.stop();
    soundSwoosh.play();
 
-   //clear out all the pipes if there are any
+   // Xóa các ống cống cũ
    $(".pipe").remove();
    pipes = new Array();
 
-   //make everything animated again
+   //Chạy lại animation CSS
    $(".animated").css('animation-play-state', 'running');
    $(".animated").css('-webkit-animation-play-state', 'running');
 
-   //fade in the splash
+   //Hiển thị màn hình chờ
    $("#splash").transition({ opacity: 1 }, 2000, 'ease');
 }
 
@@ -109,7 +109,7 @@ function startGame()
    $("#splash").stop();
    $("#splash").transition({ opacity: 0 }, 500, 'ease');
 
-   //update the big score
+   //update điểm cao nhất
    setBigScore();
 
    //debug mode?
@@ -119,39 +119,35 @@ function startGame()
       $(".boundingbox").show();
    }
 
-   //start up our loops
-   var updaterate = 1000.0 / 60.0 ; //60 times a second
+   //Khởi động vòng lặp
+   var updaterate = 1000.0 / 60.0 ; //// Tần suất cập nhật
    loopGameloop = setInterval(gameloop, updaterate);
-   loopPipeloop = setInterval(updatePipes, 1400);
+   loopPipeloop = setInterval(updatePipes, 1400); // Vòng lặp tạo ống mới mỗi 1.4 giây
 
-   //jump from the start!
+   //Nhảy một cái khi bắt đầu
    playerJump();
 }
 
 function updatePlayer(player)
 {
-   //rotation
    rotation = Math.min((velocity / 10) * 90, 90);
-
-   //apply rotation and position
    $(player).css({ rotate: rotation, top: position });
 }
 
 function gameloop() {
    var player = $("#player");
+   velocity += gravity; // Vận tốc tăng dần do trọng lực
+   position += velocity; // Vị trí thay đổi theo vận tốc
 
-   //update the player speed/position
-   velocity += gravity;
-   position += velocity;
-
-   //update the player
+   //update
    updatePlayer(player);
 
-   //create the bounding box
+   //Tạo bounding box
    var box = document.getElementById('player').getBoundingClientRect();
-   var origwidth = 50.0;
-   var origheight = 32.0;
+   var origwidth = 50.0; //Chiều rộng gốc
+   var origheight = 32.0; //Chiều cao gốc
 
+   // Điều chỉnh kích thước bounding box khi chim xoay   
    var boxwidth = origwidth - (Math.sin(Math.abs(rotation) / 90) * 8);
    var boxheight = (origheight + box.height) / 2;
    var boxleft = ((box.width - boxwidth) / 2) + box.left;
@@ -159,7 +155,7 @@ function gameloop() {
    var boxright = boxleft + boxwidth;
    var boxbottom = boxtop + boxheight;
 
-   //if we're in debug mode, draw the bounding box
+   //Hiển thị playerbox
    if(debugmode)
    {
       var boundingbox = $("#playerbox");
@@ -169,23 +165,23 @@ function gameloop() {
       boundingbox.css('width', boxwidth);
    }
 
-   //did we hit the ground?
+   //Khi chim chạm đất
    if(box.bottom >= $("#land").offset().top)
    {
       playerDead();
-      return;
+      return; //chạm đất
    }
 
-   //have they tried to escape through the ceiling? :o
+   //Khi chim cố vượt qua trần
    var ceiling = $("#ceiling");
    if(boxtop <= (ceiling.offset().top + ceiling.height()))
-      position = 0;
+      position = 0; //chạm trần
 
-   //we can't go any further without a pipe
+   //giới hạn vị trí, không thể vượt qua trần
    if(pipes[0] == null)
       return;
 
-   //determine the bounding box of the next pipes inner area
+   //xác định bounding box của khu vực bên trong ống tiếp theo
    var nextpipe = pipes[0];
    var nextpipeupper = nextpipe.children(".pipe_upper");
 
@@ -203,49 +199,46 @@ function gameloop() {
       boundingbox.css('width', pipewidth);
    }
 
-   //have we gotten inside the pipe yet?
-   if(boxright > pipeleft)
+   
+   if(boxright > pipeleft) //Chim đã đi vào vùng ngang của ống
    {
-      //we're within the pipe, have we passed between upper and lower pipes?
-      if(boxtop > pipetop && boxbottom < pipebottom)
+      if(boxtop > pipetop && boxbottom < pipebottom) // Chim nằm trong khe hở -> Không va chạm
       {
-         //yeah! we're within bounds
+
 
       }
       else
       {
-         //no! we touched the pipe
+         // Va chạm với ống
          playerDead();
          return;
       }
    }
 
 
-   //have we passed the imminent danger?
+   //Khi chim vượt qua ống
    if(boxleft > piperight)
    {
-      //yes, remove it
+      // Xóa ống đã qua khỏi mảng
       pipes.splice(0, 1);
-
-      //and score a point
+      //Tăng một điểm
       playerScore();
    }
 }
 
-//Handle space bar
+//Space
 $(document).keydown(function(e){
-   //space bar!
-   if(e.keyCode == 32)
+   if(e.keyCode == 32) //Phím space
    {
       //in ScoreScreen, hitting space should click the "replay" button. else it's just a regular spacebar hit
       if(currentstate == states.ScoreScreen)
-         $("#replay").click();
+         $("#replay").click(); //chơi lại
       else
-         screenClick();
+         screenClick(); //nhảy hoặc bắt đầu game
    }
 });
 
-//Handle mouse down OR touch start
+//Chạm màn hình và Chuột
 if("ontouchstart" in window)
    $(document).on("touchstart", screenClick);
 else
@@ -255,22 +248,22 @@ function screenClick()
 {
    if(currentstate == states.GameScreen)
    {
-      playerJump();
+      playerJump(); // Nếu đang chơi, chim nhảy
    }
    else if(currentstate == states.SplashScreen)
    {
-      startGame();
+      startGame(); // Nếu ở màn hình chờ, bắt đầu game
    }
 }
 
 function playerJump()
 {
-   velocity = jump;
-   //play jump sound
+   velocity = jump; // Đặt lại vận tốc để chim bay lên
+   //phát ra âm thanh khi chim vỗ cánh
    soundJump.stop();
    soundJump.play();
 }
-//Điểm số lớn
+//Điểm (số lớn)
 function setBigScore(erase)
 {
    var elemscore = $("#bigscore");
@@ -283,7 +276,7 @@ function setBigScore(erase)
    for(var i = 0; i < digits.length; i++)
       elemscore.append("<img src='assets/font_big_" + digits[i] + ".png' alt='" + digits[i] + "'>");
 }
-//Điểm số nhỏ
+//Điểm (số nhỏ)
 function setSmallScore()
 {
    var elemscore = $("#currentscore");
@@ -293,7 +286,7 @@ function setSmallScore()
    for(var i = 0; i < digits.length; i++)
       elemscore.append("<img src='assets/font_small_" + digits[i] + ".png' alt='" + digits[i] + "'>");
 }
-
+//Điểm lớn nhất 
 function setHighScore()
 {
    var elemscore = $("#highscore");
@@ -309,8 +302,7 @@ function setMedal()
    var elemmedal = $("#medal");
    elemmedal.empty();
 
-   if(score < 10)
-      //signal that no medal has been won
+   if(score < 10) 
       return false;
 
    if(score >= 10)
@@ -324,7 +316,7 @@ function setMedal()
 
    elemmedal.append('<img src="assets/medal_' + medal +'.png" alt="' + medal +'">');
 
-   //signal that a medal has been won
+   //Trả về true để báo đã có huy chương
    return true;
 }
 
